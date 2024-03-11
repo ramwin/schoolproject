@@ -1,1 +1,2 @@
 faker
+django-stubs[compatible-mypy]
