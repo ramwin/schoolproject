@@ -1,2 +1,5 @@
 faker
 django-stubs[compatible-mypy]
+celery
+celery-types
+celery[redis]
