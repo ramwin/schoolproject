@@ -3,3 +3,4 @@ django-stubs[compatible-mypy]
 celery
 celery-types
 celery[redis]
+pylint-django

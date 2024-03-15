@@ -8,6 +8,7 @@ import logging
 import time
 
 from celery import shared_task
+from .models import Student
 
 
 LOGGER = logging.getLogger(__name__)
@@ -21,4 +22,7 @@ def add(x: int) -> int:
         raise ValueError("数字太大了")
     time.sleep(x)
     LOGGER.info("调用add函数结束: %d", x)
+    student, _ = Student.objects.get_or_create()
+    # 这里student.的时候，会有类型提示
+    student.save()
     return x
