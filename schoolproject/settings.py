@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from typing import List
 
 from dotenv import dotenv_values
 
@@ -33,7 +34,7 @@ SECRET_KEY = 'django-insecure-t=l0aupwp(*ktptudw*qork@1!e519lb5=2en^%g45x%=-1kms
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: List[str] = []
 
 
 # Application definition
