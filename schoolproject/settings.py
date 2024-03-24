@@ -193,6 +193,7 @@ LOGGING = {
         },
         'console': {
             'class': 'logging.StreamHandler',
+            'level': "INFO",
             'formatter': 'simple',
         },
     },
@@ -206,6 +207,10 @@ LOGGING = {
             'level': "INFO",
         },
         'testapp': {
+            'handlers': DEFAULT_HANDLERS,
+            'level': "INFO",
+        },
+        'django_commands': {
             'handlers': DEFAULT_HANDLERS,
             'level': "INFO",
         },
