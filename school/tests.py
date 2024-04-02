@@ -14,6 +14,6 @@ class TestSummary(TestCase):
     def test_redis_db(self):
         redis: Redis = get_redis_connection("default")
         self.assertEqual(
-                redis.client_info()["db"],
+                redis.connection_pool.connection_kwargs["db"],
                 7,
         )
