@@ -1,0 +1,9 @@
+[
+{
+    "model": "school.student",
+    "pk": 1,
+    "fields": {
+        "name": "林波"
+    }
+}
+]
