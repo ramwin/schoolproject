@@ -1,8 +1,11 @@
+import logging
+
 from django.test import TestCase, override_settings
 from django_redis import get_redis_connection
 
 
-# Create your tests here.
+LOGGER = logging.getLogger(__name__)
+
 
 @override_settings(CACHES={
     "default": {
@@ -17,3 +20,11 @@ class TestSummary(TestCase):
                 redis.connection_pool.connection_kwargs["db"],
                 7,
         )
+
+
+class TestLog(TestCase):
+
+    def test(self):
+        LOGGER.info("info")
+        LOGGER.warning("warning")
+        LOGGER.error("error")

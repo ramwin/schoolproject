@@ -145,7 +145,7 @@ LOG_DIR.mkdir(exist_ok=True)
 
 DEFAULT_HANDLERS = [
     'debug_file', 'info_file',
-    'warning_file', 'error_file', 'console'
+    'warning_file', 'error_file', 'color'
 ]
 LOGGING = {
     'version': 1,
@@ -153,6 +153,12 @@ LOGGING = {
     'formatters': {
         'verbose': {
             'format': ('[%(levelname)5s] %(asctime)s %(pathname)s '
+                       '%(funcName)s (line: %(lineno)d)'
+                       '    %(message)s'),
+        },
+        'color': {
+            '()': 'colorlog.ColoredFormatter',
+            'format': ('%(log_color)s[%(levelname)5s] %(asctime)s %(process)d %(filename)s '
                        '%(funcName)s (line: %(lineno)d)'
                        '    %(message)s'),
         },
@@ -191,10 +197,15 @@ LOGGING = {
             'filename': LOG_DIR / 'debug.log',
             'formatter': 'verbose',
         },
-        'console': {
-            'class': 'logging.StreamHandler',
+        # 'console': {
+        #     'class': 'logging.StreamHandler',
+        #     'level': "INFO",
+        #     'formatter': 'simple',
+        # },
+        'color': {
+            'class': 'colorlog.StreamHandler',
             'level': "INFO",
-            'formatter': 'simple',
+            'formatter': 'color',
         },
     },
     'loggers': {
