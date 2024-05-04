@@ -4,3 +4,4 @@ celery
 celery-types
 celery[redis]
 pylint-django
+django-extensions

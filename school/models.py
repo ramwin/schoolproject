@@ -15,4 +15,9 @@ class Student(models.Model):
         LOGGER.info("学生数据保存了: %s", instance)
 
 
+class Exam(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    score = models.IntegerField()
+
+
 post_save.connect(Student.post_save, Student)

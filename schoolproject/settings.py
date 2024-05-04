@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     "django_commands",
+    "django_extensions",
     'school',
     "sync_model",
 ]
