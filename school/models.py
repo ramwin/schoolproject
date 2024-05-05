@@ -9,6 +9,7 @@ LOGGER = logging.getLogger(__name__)
 
 class Student(models.Model):
     name = models.TextField()
+    update_datetime = models.DateTimeField(auto_now=True)
 
     @classmethod
     def post_save(cls, instance: "Student", **kwargs):

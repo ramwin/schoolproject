@@ -159,7 +159,7 @@ LOGGING = {
         },
         'color': {
             '()': 'colorlog.ColoredFormatter',
-            'format': ('%(log_color)s[%(levelname)5s] %(asctime)s %(process)d %(filename)s '
+            'format': ('%(log_color)s[%(levelname)5s] %(asctime)s %(process)d %(name)s %(funcName)s'
                        '%(funcName)s (line: %(lineno)d)'
                        '    %(message)s'),
         },

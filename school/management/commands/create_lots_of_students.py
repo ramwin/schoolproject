@@ -19,7 +19,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         faker = Faker("zh-cn")
-        iteration_count = 100
+        iteration_count = 1
         bulk_size = 1000
         LOGGER.info("创建 %d 个学生", iteration_count * bulk_size)
         start = time.time()
