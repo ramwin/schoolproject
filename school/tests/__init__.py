@@ -3,6 +3,8 @@ import logging
 from django.test import TestCase, override_settings
 from django_redis import get_redis_connection
 
+from school.serializers import AliasSerializer
+
 
 LOGGER = logging.getLogger(__name__)
 
@@ -28,3 +30,20 @@ class TestLog(TestCase):
         LOGGER.info("info")
         LOGGER.warning("warning")
         LOGGER.error("error")
+
+
+class TestGender(TestCase):
+
+    def test(self):
+        data_cn = {
+                "性别": "男",
+        }
+        data_en = {
+                "male": "0",
+        }
+        serializer = AliasSerializer(data=data_cn)
+        breakpoint()
+        self.assertTrue(serializer.is_valid())
+
+        serializer = AliasSerializer(data=data_en)
+        self.assertTrue(serializer.is_valid())
