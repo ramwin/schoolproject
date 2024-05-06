@@ -21,4 +21,10 @@ class Exam(models.Model):
     score = models.IntegerField()
 
 
+class TestUnsetField(models.Model):
+    # 不设置的话默认是None
+    float_field = models.FloatField()
+    int_field = models.IntegerField()
+
+
 post_save.connect(Student.post_save, Student)
