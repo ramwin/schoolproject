@@ -205,7 +205,7 @@ LOGGING = {
         # },
         'color': {
             'class': 'colorlog.StreamHandler',
-            'level': "INFO",
+            'level': "DEBUG",
             'formatter': 'color',
         },
     },
@@ -228,7 +228,7 @@ LOGGING = {
         },
         'school': {
             'handlers': DEFAULT_HANDLERS,
-            'level': "INFO",
+            'level': "DEBUG",
         },
     },
 }
