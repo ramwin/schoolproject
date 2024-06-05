@@ -8,7 +8,7 @@ import logging
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
 from django.db.models.functions import Lower
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 
 
 LOGGER = logging.getLogger(__name__)
@@ -41,4 +41,11 @@ class TestUnsetField(models.Model):
     int_field = models.IntegerField()
 
 
+def log(**kwargs):
+    LOGGER.info("剩余数量: %d", Student.objects.filter(
+        id__lte=30
+    ).count())
+
+
 post_save.connect(Student.post_save, Student)
+post_delete.connect(log, Student)
