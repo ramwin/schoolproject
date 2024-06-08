@@ -6,6 +6,8 @@
 import logging
 
 from django.db import models
+from django.db.models.constraints import UniqueConstraint
+from django.db.models.functions import Lower
 from django.db.models.signals import post_save
 
 
@@ -14,7 +16,13 @@ LOGGER = logging.getLogger(__name__)
 
 class Student(models.Model):
     name = models.TextField()
+    code = models.CharField(max_length=15, null=True)
     update_datetime = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        constraints = [
+                UniqueConstraint(Lower("code"), name="code_unique"),
+        ]
 
     @classmethod
     def post_save(cls, instance: "Student", **kwargs):
