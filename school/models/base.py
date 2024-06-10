@@ -18,6 +18,7 @@ class Student(models.Model):
     name = models.TextField()
     code = models.CharField(max_length=15, null=True)
     update_datetime = models.DateTimeField(auto_now=True)
+    height = models.IntegerField(null=True)
 
     class Meta:
         constraints = [
