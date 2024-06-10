@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 class AliasSerializer(serializers.Serializer):
 
-    gender = serializers.BooleanField()
+    gender = serializers.BooleanField(source="性别")
 
     class Meta:
         fields = ["gender"]

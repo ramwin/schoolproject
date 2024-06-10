@@ -3,7 +3,8 @@
     "model": "school.student",
     "pk": 1,
     "fields": {
-        "name": "林波"
+        "name": "林波",
+        "update_datetime": "2024-01-01 00:00:00+08:00"
     }
 }
 ]

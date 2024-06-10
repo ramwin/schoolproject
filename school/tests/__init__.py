@@ -42,8 +42,6 @@ class TestGender(TestCase):
                 "male": "0",
         }
         serializer = AliasSerializer(data=data_cn)
-        breakpoint()
-        self.assertTrue(serializer.is_valid())
-
+        self.assertFalse(serializer.is_valid(), serializer.errors)
         serializer = AliasSerializer(data=data_en)
-        self.assertTrue(serializer.is_valid())
+        self.assertFalse(serializer.is_valid())
