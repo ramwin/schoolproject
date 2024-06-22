@@ -3,6 +3,7 @@ import logging
 from django.test import TestCase, override_settings
 from django_redis import get_redis_connection
 
+from school.consts import REDIS
 from school.serializers import AliasSerializer
 
 
@@ -20,6 +21,10 @@ class TestSummary(TestCase):
         redis: Redis = get_redis_connection("default")
         self.assertEqual(
                 redis.connection_pool.connection_kwargs["db"],
+                7,
+        )
+        self.assertEqual(
+                REDIS.connection_pool.connection_kwargs["db"],
                 7,
         )
 
