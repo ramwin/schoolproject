@@ -12,3 +12,9 @@ class AliasSerializer(serializers.Serializer):
 
     class Meta:
         fields = ["gender"]
+
+
+class StudentUpdateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        fields = ["code"]
