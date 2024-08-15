@@ -136,12 +136,6 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"{CONFIG['REDIS_LOCATION']}",
-    },
-}
 
 
 # Celery Configuration Options
@@ -153,4 +147,5 @@ DJANGO_COMMANDS_ALLOW_REMOTE_CALL = ["slow_command"]
 
 include(
         "logging_settings.py",
+        "cache_settings.py",
 )
