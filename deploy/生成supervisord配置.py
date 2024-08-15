@@ -67,8 +67,8 @@ template = Template((
         "{% for key, value in program.config.items() %}"
             "{{key}}={{value}}\n"
         "{% endfor %}"
-        "stdout_logfile={{program.config.directory}}/log/supervisor_{{program.name}}.stdout.log\n"
-        "stderr_logfile={{program.config.directory}}/log/supervisor_{{program.name}}.stderr.log\n"
+        "stdout_logfile={{program.config.directory}}/log/{{program.name}}/supervisor/stdout.log\n"
+        "stderr_logfile={{program.config.directory}}/log/{{program.name}}/supervisor/stderr.log\n"
     "\n\n"
     "{% endfor %}"
 ))
