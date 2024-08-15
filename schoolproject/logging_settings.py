@@ -10,7 +10,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / 'log'
 LOG_DIR.mkdir(exist_ok=True)
-(LOG_DIR / sys.argv[1]).mkdir(exist_ok=True)
+(LOG_DIR / sys.argv[1]).mkdir(exist_ok=True, parents=True)
 
 DEFAULT_HANDLERS = [
         'debug_file', 'info_file',
@@ -62,6 +62,26 @@ handlers = {
         'formatter': 'color',
     },
 }
+loggers = {
+    'default': {
+        'handlers': DEFAULT_HANDLERS,
+        'level': "INFO",
+        "propagate": False,
+    },
+    'django': {
+        'handlers': DEFAULT_HANDLERS,
+        'level': "INFO",
+        "propagate": False,
+    },
+    'testapp': {
+        'handlers': DEFAULT_HANDLERS,
+        'level': "INFO",
+        "propagate": False,
+    },
+    # 各个APP配置
+    'django_commands': { 'handlers': DEFAULT_HANDLERS, 'level': "INFO", "propagate": False },
+    'school': { 'handlers': DEFAULT_HANDLERS, 'level': "INFO", "propagate": False },
+}
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -82,30 +102,5 @@ LOGGING = {
         },
     },
     'handlers': handlers,
-    'loggers': {
-        'default': {
-            'handlers': DEFAULT_HANDLERS,
-            'level': "INFO",
-            "propagate": False,
-        },
-        'django': {
-            'handlers': DEFAULT_HANDLERS,
-            'level': "INFO",
-            "propagate": False,
-        },
-        'testapp': {
-            'handlers': DEFAULT_HANDLERS,
-            'level': "INFO",
-            "propagate": False,
-        },
-        # 各个APP配置
-        'django_commands': {
-            'handlers': DEFAULT_HANDLERS,
-            'level': "INFO",
-        },
-        'school': {
-            'handlers': DEFAULT_HANDLERS,
-            'level': "DEBUG",
-        },
-    },
+    'loggers': loggers,
 }
