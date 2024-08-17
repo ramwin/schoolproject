@@ -14,7 +14,8 @@ LOG_DIR.mkdir(exist_ok=True)
 
 DEFAULT_HANDLERS = [
         'debug_file', 'info_file',
-        'warning_file', 'error_file', 'color',
+        'warning_file', 'error_file',
+        "console",
         'command_file',
 ]
 handlers = {
@@ -56,12 +57,20 @@ handlers = {
         'filename': LOG_DIR / 'debug.log',
         'formatter': 'verbose',
     },
-    'color': {
-        'class': 'colorlog.StreamHandler',
-        'level': "DEBUG",
-        'formatter': 'color',
-    },
 }
+if os.environ.get("TERM") == "xterm-256color":
+    handlers['console'] = {
+        'class': 'colorlog.StreamHandler',
+        'level': "INFO",
+        'formatter': 'color',
+        'stream': sys.stdout,
+    }
+else:
+    handlers['console'] = {
+        'class': 'logging.StreamHandler',
+        'formatter': 'verbose',
+        'stream': sys.stdout,
+    }
 loggers = {
     'default': {
         'handlers': DEFAULT_HANDLERS,
@@ -93,7 +102,7 @@ LOGGING = {
         },
         'color': {
             '()': 'colorlog.ColoredFormatter',
-            'format': ('%(log_color)s[%(levelname)5s] %(asctime)s %(process)d %(thread)d %(name)s '
+            'format': ('%(log_color)s[%(levelname)5s] %(asctime)s %(process)d %(name)s '
                        '%(funcName)s (line: %(lineno)d)'
                        '    %(message)s'),
         },
