@@ -14,6 +14,15 @@ from .base import Student
 LOGGER = logging.getLogger(__name__)
 
 
+class Parent(models.Model):
+    pass
+
+
+class Child(models.Model):
+    mother = models.ForeignKey(Parent, on_delete=models.CASCADE, related_name="children")
+    father = models.ForeignKey(Parent, on_delete=models.PROTECT, related_name="+")
+
+
 class Klass(models.Model):
     students = models.ManyToManyField(Student)
 
