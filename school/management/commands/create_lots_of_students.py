@@ -28,7 +28,8 @@ class Command(BaseCommand):
             for _ in range(bulk_size):
                 students.append(
                         Student(
-                            name=faker.name()
+                            name=faker.name(),
+                            info={},
                         )
                 )
             Student.objects.bulk_create(students)

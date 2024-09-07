@@ -25,6 +25,7 @@ class Student(models.Model):
     code = models.CharField(max_length=15, null=True)
     update_datetime = models.DateTimeField(auto_now=True)
     height = models.IntegerField(null=True)
+    age = models.IntegerField(default=0)
     info = models.JSONField()
 
     class Meta:
@@ -54,5 +55,5 @@ def log(**kwargs):
     ).count())
 
 
-post_save.connect(Student.post_save, Student)
+# post_save.connect(Student.post_save, Student)
 post_delete.connect(log, Student)
