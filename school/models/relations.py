@@ -6,7 +6,7 @@
 import logging
 
 from django.db import models
-from django.db.models.signals import m2m_changed
+from django.db.models.signals import m2m_changed, post_save
 
 from .base import Student
 
@@ -38,6 +38,15 @@ def students_changed(
     )
 
 
+class Lesson(models.Model):
+    title = models.TextField()
+
+    @classmethod
+    def post_save(cls, *args, **kwargs):
+        LOGGER.info(kwargs)
+
+
 # 监听Klass是没用的
 # m2m_changed.connect(students_changed, Klass)
 m2m_changed.connect(students_changed, Klass.students.through)
+post_save.connect(Lesson.post_save, Lesson)
