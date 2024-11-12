@@ -10,8 +10,14 @@ from django.db.models.constraints import UniqueConstraint
 from django.db.models.functions import Lower
 from django.db.models.signals import post_save, post_delete
 
+from eventlog.mixins import LoggerMixin
+
 
 LOGGER = logging.getLogger(__name__)
+
+
+class Tag(LoggerMixin, models.Model):
+    text = models.TextField(default="", blank=True)
 
 
 class Student(models.Model):

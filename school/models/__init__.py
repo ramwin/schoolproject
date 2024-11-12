@@ -1,2 +1,2 @@
-from .base import Student, Exam
+from .base import Student, Exam, Tag
 from .relations import Klass
