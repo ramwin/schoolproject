@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     "django_extensions",
     'school',
     "sync_model",
+    "eventlog",
 ]
 
 MIDDLEWARE = [
