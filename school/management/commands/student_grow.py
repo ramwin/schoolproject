@@ -15,7 +15,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Command(LargeQuerysetMutiProcessHandlerCommand):
-    queryset = Student.objects.all()
+    queryset = Student.objects.all().none()
 
     def get_tasks(self):
         self.queryset.update(age=0)
