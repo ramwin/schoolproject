@@ -149,4 +149,5 @@ DJANGO_COMMANDS_ALLOW_REMOTE_CALL = ["slow_command"]
 include(
         "logging_settings.py",
         "cache_settings.py",
+        "rest_settings.py",
 )

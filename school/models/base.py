@@ -55,5 +55,9 @@ def log(**kwargs):
     ).count())
 
 
+class DateTimeModel(models.Model):
+    now = models.DateTimeField(auto_now_add=True)
+
+
 # post_save.connect(Student.post_save, Student)
 post_delete.connect(log, Student)

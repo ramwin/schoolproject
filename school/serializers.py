@@ -5,6 +5,7 @@
 
 from rest_framework import serializers
 from school.models import Student
+from school.models.base import DateTimeModel
 
 
 class AliasSerializer(serializers.Serializer):
@@ -26,3 +27,14 @@ class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ["info"]
+
+
+class DateTimeModelSerializer(serializers.ModelSerializer):
+    now = serializers.SerializerMethodField()
+
+    class Meta:
+        model = DateTimeModel
+        fields = ["now"]
+
+    def get_now(self, obj):
+        return obj.now.timestamp()
