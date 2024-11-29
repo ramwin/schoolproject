@@ -16,6 +16,10 @@ from eventlog.mixins import LoggerMixin
 LOGGER = logging.getLogger(__name__)
 
 
+class School(models.Model):
+    name = models.TextField()
+
+
 class Tag(LoggerMixin, models.Model):
     text = models.TextField(default="", blank=True)
 

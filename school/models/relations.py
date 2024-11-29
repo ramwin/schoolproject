@@ -8,7 +8,7 @@ import logging
 from django.db import models
 from django.db.models.signals import m2m_changed, post_save
 
-from .base import Student
+from .base import Student, School
 
 
 LOGGER = logging.getLogger(__name__)
@@ -24,6 +24,7 @@ class Child(models.Model):
 
 
 class Klass(models.Model):
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
     students = models.ManyToManyField(Student)
 
 
