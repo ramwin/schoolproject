@@ -7,8 +7,8 @@ from split_settings.tools import include
 
 
 CONFIG: Dict[str, str] = {
-        **dotenv_values(".env.shared"),
-        **dotenv_values(".env"),
+    **dotenv_values(".env.shared"),  # type: ignore[dict-item]
+    **dotenv_values(".env"),  # type: ignore[dict-item]
 }
 
 # Quick-start development settings - unsuitable for production
@@ -115,12 +115,6 @@ STATIC_ROOT = 'django_static'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
-# Celery Configuration Options
-CELERY_TIMEZONE = "Australia/Tasmania"
-CELERY_TASK_TRACK_STARTED = True
-CELERY_TASK_TIME_LIMIT = 30 * 60
-
 DJANGO_COMMANDS_ALLOW_REMOTE_CALL = ["slow_command"]
 
 include(
@@ -129,3 +123,7 @@ include(
         "rest_settings.py",
         "database_settings.py",
 )
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60

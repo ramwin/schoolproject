@@ -163,3 +163,4 @@ cython_debug/
 
 sync_model
 django_commands
+log
