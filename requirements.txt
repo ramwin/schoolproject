@@ -5,4 +5,23 @@ celery-types
 celery[redis]
 pylint-django
 pytest-django
+
+# 普通包
+humanfriendly
+pydash
+python-dotenv>=1.0.0
+retry
+types-retry
+psycopg2-binary
+psutil
+colorlog
+grpcio
+grpcio-tools
+click>=8.1.7
+grpcio>=1.67.0,<2
+grpcio-tools>=1.67.1,<2
+protobuf>=5.26.1,<6
+
+# django
 django-extensions
+django-eventlog2>=2.2,<3
