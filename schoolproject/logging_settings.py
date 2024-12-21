@@ -27,6 +27,7 @@ handlers = {
         'level': "ERROR",
         'class': 'logging.handlers.TimedRotatingFileHandler',
         'filename': LOG_DIR / 'error.log',
+        'backupCount': 100,
         'formatter': 'verbose',
     },
     'warning_file': {
@@ -66,7 +67,7 @@ handlers = {
         'level': "INFO",
         'formatter': 'color',
         'stream': sys.stdout,
-    }
+    },
 }
 loggers = {
     'default': {
