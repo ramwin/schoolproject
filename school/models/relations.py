@@ -15,12 +15,13 @@ LOGGER = logging.getLogger(__name__)
 
 
 class Parent(models.Model):
-    pass
+    name = models.TextField(default="")
 
 
 class Child(models.Model):
     mother = models.ForeignKey(Parent, on_delete=models.CASCADE, related_name="children")
     father = models.ForeignKey(Parent, on_delete=models.PROTECT, related_name="+")
+    father_name = models.TextField(null=True)
 
 
 class Klass(models.Model):

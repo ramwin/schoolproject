@@ -28,6 +28,7 @@ handlers = {
         'class': 'logging.handlers.TimedRotatingFileHandler',
         'filename': LOG_DIR / 'error.log',
         'backupCount': 100,
+        'when': 'D',
         'formatter': 'verbose',
     },
     'warning_file': {
@@ -41,7 +42,7 @@ handlers = {
     'info_file': {
         'level': "INFO",
         'class': 'logging.handlers.TimedRotatingFileHandler',
-        'when': 'm',
+        'when': 'H',
         'backupCount': 100,
         'filename': LOG_DIR / 'info.log',
         'formatter': 'verbose',
@@ -49,7 +50,7 @@ handlers = {
     'command_file': {
         'level': "INFO",
         'class': 'logging.handlers.TimedRotatingFileHandler',
-        'when': 'm',
+        'when': 'h',
         'backupCount': 100,
         'filename': LOG_DIR / sys.argv[1] / 'info.log',
         'formatter': 'verbose',
