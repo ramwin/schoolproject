@@ -53,10 +53,12 @@ class TestUnsetField(models.Model):
     int_field = models.IntegerField()
 
 
-def log(**kwargs):
+def log(instance, using, **kwargs):
     LOGGER.info("剩余数量: %d", Student.objects.filter(
         id__lte=30
     ).count())
+    LOGGER.info(using)
+    LOGGER.info("删除的时候也有id: %d", instance.id)
 
 
 class DateTimeModel(models.Model):
