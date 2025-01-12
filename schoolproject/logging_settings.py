@@ -12,15 +12,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / 'log'
 LOG_DIR.mkdir(exist_ok=True)
 
-if sys.argv[0] == 'manage.py':
-    (LOG_DIR / sys.argv[1]).mkdir(exist_ok=True, parents=True)
-
 DEFAULT_HANDLERS = [
+        'debug_file',
         'info_file',
         'warning_file',
         'error_file',
         "console",
-        'command_file',
 ]
 handlers = {
     'error_file': {
@@ -45,14 +42,6 @@ handlers = {
         'when': 'H',
         'backupCount': 100,
         'filename': LOG_DIR / 'info.log',
-        'formatter': 'verbose',
-    },
-    'command_file': {
-        'level': "INFO",
-        'class': 'logging.handlers.TimedRotatingFileHandler',
-        'when': 'h',
-        'backupCount': 100,
-        'filename': LOG_DIR / sys.argv[1] / 'info.log',
         'formatter': 'verbose',
     },
     'debug_file': {
@@ -113,3 +102,15 @@ LOGGING = {
     'handlers': handlers,
     'loggers': loggers,
 }
+
+if sys.argv[0] == 'manage.py':
+    (LOG_DIR / sys.argv[1]).mkdir(exist_ok=True, parents=True)
+    DEFAULT_HANDLERS.append("command_file")
+    handlers["command_file"] = {
+        'level': "INFO",
+        'class': 'logging.handlers.TimedRotatingFileHandler',
+        'when': 'h',
+        'backupCount': 100,
+        'filename': LOG_DIR / sys.argv[1] / 'info.log',
+        'formatter': 'verbose',
+    }
