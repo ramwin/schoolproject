@@ -38,3 +38,10 @@ class DateTimeModelSerializer(serializers.ModelSerializer):
 
     def get_now(self, obj):
         return obj.now.timestamp()
+
+
+class TagSerializer(serializers.Serializer):
+    text = serializers.CharField()
+
+    class Meta:
+        fields = ["text"]
