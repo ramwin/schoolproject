@@ -10,3 +10,4 @@ pidfile = "gunicorn.pid"
 bind = "0.0.0.0:8000"
 accesslog = "log/gunicorn.access.log"
 errorlog = "log/gunicorn.error.log"
+timeout = 3

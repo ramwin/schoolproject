@@ -14,10 +14,26 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+import logging
+import time
+
 from django.contrib import admin
 from django.urls import path, include
+from django.http.response import JsonResponse
+
+
+LOGGER = logging.getLogger(__name__)
+
+
+def sleep(request, timeout: int):
+    LOGGER.info("处理: %d", timeout)
+    time.sleep(timeout)
+    LOGGER.info("处理完毕: %d", timeout)
+    return JsonResponse({"timeout": timeout})
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/django-commands/', include("django_commands.urls")),
+    path("sleep/<int:timeout>/", sleep),
 ]

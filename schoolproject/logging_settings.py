@@ -78,6 +78,7 @@ loggers = {
     # 各个APP配置
     'django_commands': { 'handlers': DEFAULT_HANDLERS, 'level': "INFO", "propagate": False },
     'school': { 'handlers': DEFAULT_HANDLERS, 'level': "INFO", "propagate": False },
+    'schoolproject': { 'handlers': DEFAULT_HANDLERS, 'level': "INFO", "propagate": False },
 }
 
 LOGGING = {
