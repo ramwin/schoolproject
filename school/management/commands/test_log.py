@@ -17,7 +17,13 @@ class Command(MultiTimesCommand):
     MAX_TIMES = 3
     help = "测试日志问题"
 
-    def handle(self, *args, **kwargs):
+    def handle(self, verbosity: int, *args, **kwargs):
+        LOGGER.info("verbosity: %d", verbosity)
+        if verbosity == 3:
+            logging.getLogger('school').setLevel(logging.DEBUG)
+            logging.getLogger("school").handlers[4].setLevel(logging.DEBUG)
+            LOGGER.info("因为设置了verbose, 所以下面的debug会展示")
+        LOGGER.debug("debug")
         LOGGER.info("info")
         LOGGER.warning("warning")
         LOGGER.error("error")
