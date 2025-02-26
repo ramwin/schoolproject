@@ -15,5 +15,9 @@ app = Celery('proj',
 
 app.conf.result_backend = "redis://localhost:6379/"
 app.config_from_object('django.conf:settings', namespace='CELERY')
+app.conf.task_routes = {
+    "school.tasks.test_log": {'queue': "log_queue"},
+    "school.tasks.add": {'queue': "add_tasks_queue"},
+}
 
 app.autodiscover_tasks()

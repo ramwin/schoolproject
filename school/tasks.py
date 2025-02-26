@@ -26,3 +26,11 @@ def add(x: int) -> int:
     # 这里student.的时候，会有类型提示
     student.save()
     return x
+
+
+@share_task
+def test_log() -> None:
+    LOGGER.info("我是info")
+    LOGGER.warning("我是warning")
+    LOGGER.error("我是error, 我要报错了")
+    raise ValueError
