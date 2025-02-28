@@ -4,6 +4,7 @@
 
 
 import logging
+import colorlog
 
 from django.core.management.base import BaseCommand
 from django_commands.commands import MultiTimesCommand
@@ -21,7 +22,9 @@ class Command(MultiTimesCommand):
         LOGGER.info("verbosity: %d", verbosity)
         if verbosity == 3:
             logging.getLogger('school').setLevel(logging.DEBUG)
-            logging.getLogger("school").handlers[4].setLevel(logging.DEBUG)
+            for handler in logging.getLogger("school").handlers:
+                if isinstance(handler, colorlog.StreamHandler):
+                    handler.setLevel(logging.DEBUG)
             LOGGER.info("因为设置了verbose, 所以下面的debug会展示")
         LOGGER.debug("debug")
         LOGGER.info("info")
