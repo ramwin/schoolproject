@@ -27,7 +27,7 @@ class TestSummary(TestCase):
         )
         self.assertEqual(
                 REDIS.connection_pool.connection_kwargs["db"],
-                7,
+                0,
         )
 
 

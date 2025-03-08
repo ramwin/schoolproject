@@ -6,6 +6,7 @@
 import logging
 from django.test import TestCase
 
+from school.models.base import School
 from school.models.relations import Klass, Student
 
 
@@ -15,9 +16,9 @@ LOGGER = logging.getLogger(__name__)
 class Test(TestCase):
 
     def test(self):
-        student1 = Student.objects.create()
-        student2 = Student.objects.create()
-        klass = Klass.objects.create()
+        student1 = Student.objects.create(info={})
+        student2 = Student.objects.create(info={})
+        klass = Klass.objects.create(school=School.objects.create())
         LOGGER.info("单独add")
         klass.students.add(student1)
         LOGGER.info("set +1 -1")
