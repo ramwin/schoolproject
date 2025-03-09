@@ -54,7 +54,7 @@ handlers = {
     },
     'console': {
         'class': 'colorlog.StreamHandler',
-        'level': "INFO",
+        'level': "DEBUG",
         'formatter': 'color',
         'stream': sys.stdout,
     },
