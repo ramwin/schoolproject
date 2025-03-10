@@ -1,5 +1,7 @@
 import logging
 
+from redis import Redis
+
 from django.test import TestCase, override_settings
 from django_redis import get_redis_connection
 

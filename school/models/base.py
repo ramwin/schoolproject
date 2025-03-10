@@ -65,5 +65,10 @@ class DateTimeModel(models.Model):
     now = models.DateTimeField(auto_now_add=True)
 
 
+class DictModel(models.Model):
+    number = models.IntegerField()
+    other = models.JSONField()
+
+
 # post_save.connect(Student.post_save, Student)
 post_delete.connect(log, Student)
