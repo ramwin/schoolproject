@@ -12,6 +12,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / 'log'
 LOG_DIR.mkdir(exist_ok=True)
 
+for level in ["debug", "info", "warning", "error"]:
+    LOG_DIR.joinpath(level).mkdir(exist_ok=True)
+
 DEFAULT_HANDLERS = [
         'debug_file',
         'info_file',
@@ -23,7 +26,7 @@ handlers = {
     'error_file': {
         'level': "ERROR",
         'class': 'logging.handlers.TimedRotatingFileHandler',
-        'filename': LOG_DIR / 'error.log',
+        'filename': LOG_DIR / "error" / 'error.log',
         'backupCount': 100,
         'when': 'D',
         'formatter': 'verbose',
@@ -31,7 +34,7 @@ handlers = {
     'warning_file': {
         'level': "WARNING",
         'class': 'logging.handlers.RotatingFileHandler',
-        'filename': LOG_DIR / 'warning.log',
+        'filename': LOG_DIR / "warning" / 'warning.log',
         'maxBytes': 1024 * 1024 * 10,
         'backupCount': 20,
         'formatter': 'verbose',
@@ -41,7 +44,7 @@ handlers = {
         'class': 'logging.handlers.TimedRotatingFileHandler',
         'when': 'H',
         'backupCount': 100,
-        'filename': LOG_DIR / 'info.log',
+        'filename': LOG_DIR / "info" / 'info.log',
         'formatter': 'verbose',
     },
     'debug_file': {
@@ -49,7 +52,7 @@ handlers = {
         'class': 'logging.handlers.TimedRotatingFileHandler',
         'when': 'm',
         'backupCount': 100,
-        'filename': LOG_DIR / 'debug.log',
+        'filename': LOG_DIR / "debug" / 'debug.log',
         'formatter': 'verbose',
     },
     'console': {
