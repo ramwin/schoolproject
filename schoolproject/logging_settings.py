@@ -3,6 +3,7 @@
 # Xiang Wang <ramwin@qq.com>
 
 
+import logging
 import os
 import sys
 from pathlib import Path
@@ -15,12 +16,20 @@ LOG_DIR.mkdir(exist_ok=True)
 for level in ["debug", "info", "warning", "error"]:
     LOG_DIR.joinpath(level).mkdir(exist_ok=True)
 
+class NoErrorFilter(logging.Filter):
+
+    def filter(self, record):
+        if record.levelname == "ERROR":
+            return False
+        return True
+
 DEFAULT_HANDLERS = [
         'debug_file',
         'info_file',
         'warning_file',
         'error_file',
         "console",
+        "error_console",
 ]
 handlers = {
     'error_file': {
@@ -60,6 +69,13 @@ handlers = {
         'level': "DEBUG",
         'formatter': 'color',
         'stream': sys.stdout,
+        "filters": ["no_error_filter"],
+    },
+    'error_console': {
+        'class': 'colorlog.StreamHandler',
+        'level': "ERROR",
+        'formatter': 'color',
+        'stream': sys.stderr,
     },
 }
 loggers = {
@@ -87,6 +103,11 @@ loggers = {
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    "filters": {
+        "no_error_filter": {
+            "()": "schoolproject.logging_settings.NoErrorFilter",
+        },
+    },
     'formatters': {
         'verbose': {
             'format': ('[%(levelname)5s] %(asctime)s %(process)d %(name)s '

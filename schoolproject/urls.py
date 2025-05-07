@@ -32,8 +32,18 @@ def sleep(request, timeout: int):
     return JsonResponse({"timeout": timeout})
 
 
+def proxy(request):
+    response = JsonResponse({})
+    response.headers = {
+            "django": "proxy",
+            "Access-Control-Allow-Origin": "cors.ramwin.com",
+    }
+    return response
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('proxy/', proxy),
     path('api/django-commands/', include("django_commands.urls")),
     path("sleep/<int:timeout>/", sleep),
 ]
