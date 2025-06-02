@@ -25,3 +25,4 @@ protobuf>=5.26.1,<6
 # django
 django-extensions
 django-eventlog2>=2.2,<3
+django-sync-model
