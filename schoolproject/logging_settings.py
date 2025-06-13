@@ -9,6 +9,14 @@ import sys
 from pathlib import Path
 
 
+class NoErrorFilter(logging.Filter):
+
+    def filter(self, record):
+        if record.levelname == "ERROR":
+            return False
+        return True
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / 'log'
 LOG_DIR.mkdir(exist_ok=True)
@@ -16,12 +24,6 @@ LOG_DIR.mkdir(exist_ok=True)
 for level in ["debug", "info", "warning", "error"]:
     LOG_DIR.joinpath(level).mkdir(exist_ok=True)
 
-class NoErrorFilter(logging.Filter):
-
-    def filter(self, record):
-        if record.levelname == "ERROR":
-            return False
-        return True
 
 DEFAULT_HANDLERS = [
         'debug_file',
@@ -34,11 +36,11 @@ DEFAULT_HANDLERS = [
 handlers = {
     'error_file': {
         'level': "ERROR",
-        'class': 'logging.handlers.TimedRotatingFileHandler',
+        'class': 'logging_ext2.handlers.TimedRotatingFileHandler',
+        'max_keep': 100,
         'filename': LOG_DIR / "error" / 'error.log',
-        'backupCount': 100,
-        'when': 'D',
         'formatter': 'verbose',
+        "datetime_formatter": "%Y-%m-%d",
     },
     'warning_file': {
         'level': "WARNING",
@@ -50,26 +52,26 @@ handlers = {
     },
     'info_file': {
         'level': "INFO",
-        'class': 'logging.handlers.TimedRotatingFileHandler',
-        'when': 'H',
-        'backupCount': 100,
+        'class': 'logging_ext2.handlers.TimedRotatingFileHandler',
+        'max_keep': 100,
         'filename': LOG_DIR / "info" / 'info.log',
         'formatter': 'verbose',
+        "datetime_formatter": "%Y-%m-%d_%H",
     },
     'debug_file': {
         'level': "DEBUG",
-        'class': 'logging.handlers.TimedRotatingFileHandler',
-        'when': 'm',
-        'backupCount': 100,
+        'class': 'logging_ext2.handlers.TimedRotatingFileHandler',
+        'max_keep': 100,
         'filename': LOG_DIR / "debug" / 'debug.log',
+        "datetime_formatter": "%Y-%m-%d_%H",
         'formatter': 'verbose',
     },
     'console': {
         'class': 'colorlog.StreamHandler',
-        'level': "DEBUG",
+        'level': "INFO",
         'formatter': 'color',
         'stream': sys.stdout,
-        "filters": ["no_error_filter"],
+        "filters": ["no_error"],
     },
     'error_console': {
         'class': 'colorlog.StreamHandler',
@@ -104,8 +106,8 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     "filters": {
-        "no_error_filter": {
-            "()": "schoolproject.logging_settings.NoErrorFilter",
+        "no_error": {
+            "()": NoErrorFilter,
         },
     },
     'formatters': {
