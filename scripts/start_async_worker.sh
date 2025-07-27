@@ -32,13 +32,15 @@ fi
 REDIS_KEY=${1:-"async_tasks"}
 INTERVAL=${2:-1}
 MAX_TASKS=${3:-""}
+MAX_CONCURRENT=${4:-5}
 
-echo "启动异步任务处理器..."
+echo "启动并发异步任务处理器..."
 echo "Redis键: $REDIS_KEY"
 echo "轮询间隔: ${INTERVAL}秒"
+echo "最大并发数: $MAX_CONCURRENT"
 if [ -n "$MAX_TASKS" ]; then
     echo "最大任务数: $MAX_TASKS"
-    python manage.py async_command --redis-key "$REDIS_KEY" --interval "$INTERVAL" --max-tasks "$MAX_TASKS"
+    python manage.py async_command --redis-key "$REDIS_KEY" --interval "$INTERVAL" --max-tasks "$MAX_TASKS" --max-concurrent "$MAX_CONCURRENT"
 else
-    python manage.py async_command --redis-key "$REDIS_KEY" --interval "$INTERVAL"
+    python manage.py async_command --redis-key "$REDIS_KEY" --interval "$INTERVAL" --max-concurrent "$MAX_CONCURRENT"
 fi 
