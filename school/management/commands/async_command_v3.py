@@ -57,41 +57,8 @@ async def async_handle(data: Dict[str, Any]) -> None:
     LOGGER.info(f"任务处理完成: {data}")
 
 
-class AsyncTaskProcessor:
-    """异步任务处理器，使用信号量和队列管理并发"""
-    
-    def __init__(self, max_concurrent: int = 5):
-        self.semaphore = asyncio.Semaphore(max_concurrent)
-        self.max_concurrent = max_concurrent
-        self.processed_count = 0
-        
-    async def process_task(self, task_data: Dict[str, Any]) -> None:
-        """使用信号量控制并发处理单个任务"""
-        async with self.semaphore:
-            self.processed_count += 1
-            task_id = self.processed_count
-            
-            try:
-                LOGGER.info(f"开始处理任务 #{task_id} (并发数: {self.max_concurrent - self.semaphore._value})")
-                await async_handle(task_data)
-                LOGGER.info(f"成功处理任务 #{task_id}")
-            except Exception as e:
-                LOGGER.error(f"处理任务 #{task_id} 失败: {task_data}, 错误: {e}")
-    
-    async def process_tasks_batch(self, tasks: list) -> None:
-        """并发处理一批任务"""
-        if not tasks:
-            return
-            
-        # 创建所有任务
-        task_coros = [self.process_task(task) for task in tasks]
-        
-        # 并发执行所有任务
-        await asyncio.gather(*task_coros, return_exceptions=True)
-
-
 class Command(BaseCommand):
-    help = '异步处理Redis中的任务队列（支持并发处理）'
+    help = '现代异步任务处理器（使用TaskGroup）'
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -118,32 +85,36 @@ class Command(BaseCommand):
             default=5,
             help='最大并发任务数量 (默认: 5个)'
         )
-        parser.add_argument(
-            '--batch-size',
-            type=int,
-            default=10,
-            help='批处理大小 (默认: 10个)'
-        )
 
-    async def process_redis_tasks(self, redis_client, redis_key: str, max_tasks: Optional[int] = None, 
-                                 max_concurrent: int = 5, batch_size: int = 10):
+    async def process_with_task_group(self, redis_client, redis_key: str, 
+                                    max_tasks: Optional[int] = None, 
+                                    max_concurrent: int = 5):
         """
-        使用优雅的并发控制处理Redis中的任务
+        使用TaskGroup处理Redis任务（Python 3.11+）
         
         Args:
             redis_client: Redis客户端
             redis_key: Redis列表键名
             max_tasks: 最大处理任务数量
             max_concurrent: 最大并发任务数量
-            batch_size: 批处理大小
         """
-        processor = AsyncTaskProcessor(max_concurrent)
-        tasks_batch = []
+        semaphore = asyncio.Semaphore(max_concurrent)
+        processed_count = 0
+        
+        async def process_single_task(task_data: Dict[str, Any], task_id: int):
+            """处理单个任务"""
+            async with semaphore:
+                try:
+                    LOGGER.info(f"开始处理任务 #{task_id}")
+                    await async_handle(task_data)
+                    LOGGER.info(f"成功处理任务 #{task_id}")
+                except Exception as e:
+                    LOGGER.error(f"处理任务 #{task_id} 失败: {e}")
         
         while True:
             try:
                 # 检查是否达到最大任务数量
-                if max_tasks and processor.processed_count >= max_tasks:
+                if max_tasks and processed_count >= max_tasks:
                     LOGGER.info(f"已达到最大任务数量 {max_tasks}，停止处理")
                     break
                 
@@ -151,14 +122,9 @@ class Command(BaseCommand):
                 task_data = await redis_client.rpop(redis_key)
                 
                 if task_data is None:
-                    # 没有任务，处理当前批次
-                    if tasks_batch:
-                        LOGGER.info(f"处理剩余 {len(tasks_batch)} 个任务...")
-                        await processor.process_tasks_batch(tasks_batch)
-                        tasks_batch.clear()
-                    else:
-                        LOGGER.debug(f"Redis列表 {redis_key} 为空，等待新任务...")
-                        await asyncio.sleep(1)
+                    # 没有任务，等待一段时间后继续
+                    LOGGER.debug(f"Redis列表 {redis_key} 为空，等待新任务...")
+                    await asyncio.sleep(1)
                     continue
                 
                 # 解析任务数据
@@ -168,23 +134,28 @@ class Command(BaseCommand):
                     LOGGER.error(f"解析任务数据失败: {task_data}, 错误: {e}")
                     continue
                 
-                # 添加到批次
-                tasks_batch.append(task)
+                # 使用TaskGroup处理任务
+                processed_count += 1
                 
-                # 当批次满时处理
-                if len(tasks_batch) >= batch_size:
-                    LOGGER.info(f"处理批次任务，共 {len(tasks_batch)} 个")
-                    await processor.process_tasks_batch(tasks_batch)
-                    tasks_batch.clear()
+                # 检查Python版本是否支持TaskGroup
+                try:
+                    async with asyncio.TaskGroup() as tg:
+                        tg.create_task(
+                            process_single_task(task, processed_count),
+                            name=f"task_{processed_count}"
+                        )
+                except AttributeError:
+                    # 如果Python版本不支持TaskGroup，回退到create_task
+                    asyncio.create_task(
+                        process_single_task(task, processed_count),
+                        name=f"task_{processed_count}"
+                    )
+                
+                LOGGER.info(f"启动任务 #{processed_count}，当前并发数: {max_concurrent - semaphore._value}")
                     
             except Exception as e:
                 LOGGER.error(f"处理Redis任务时发生错误: {e}")
                 await asyncio.sleep(5)  # 发生错误时等待更长时间
-        
-        # 处理剩余的任务
-        if tasks_batch:
-            LOGGER.info(f"处理最后 {len(tasks_batch)} 个任务...")
-            await processor.process_tasks_batch(tasks_batch)
 
     async def async_handle(self, *args, **options):
         """
@@ -194,13 +165,11 @@ class Command(BaseCommand):
         interval = options['interval']
         max_tasks = options['max_tasks']
         max_concurrent = options['max_concurrent']
-        batch_size = options['batch_size']
         
-        LOGGER.info(f"启动优雅的并发异步任务处理器")
+        LOGGER.info(f"启动现代异步任务处理器")
         LOGGER.info(f"Redis键: {redis_key}")
         LOGGER.info(f"轮询间隔: {interval}秒")
         LOGGER.info(f"最大并发数: {max_concurrent}")
-        LOGGER.info(f"批处理大小: {batch_size}")
         if max_tasks:
             LOGGER.info(f"最大任务数: {max_tasks}")
         
@@ -208,7 +177,7 @@ class Command(BaseCommand):
         redis_client = get_redis_connection("default")
         
         try:
-            await self.process_redis_tasks(redis_client, redis_key, max_tasks, max_concurrent, batch_size)
+            await self.process_with_task_group(redis_client, redis_key, max_tasks, max_concurrent)
         except KeyboardInterrupt:
             LOGGER.info("收到中断信号，正在停止...")
         except Exception as e:
@@ -226,4 +195,4 @@ class Command(BaseCommand):
             LOGGER.info("命令被用户中断")
         except Exception as e:
             LOGGER.error(f"命令执行失败: {e}")
-            raise
+            raise 
