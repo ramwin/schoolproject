@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "health_check.contrib.redis",
     "constance",
     "django_extensions",
+    "utils",
     'school',
     "sync_model",
 ]
