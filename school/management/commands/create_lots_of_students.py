@@ -8,6 +8,7 @@ import logging
 from faker import Faker
 
 from django.core.management.base import BaseCommand
+from django_commands.commands import MultiTimesCommand
 
 from school.models import Student
 
@@ -15,12 +16,13 @@ from school.models import Student
 LOGGER = logging.getLogger(__name__)
 
 
-class Command(BaseCommand):
+class Command(MultiTimesCommand):
+    INTERVAL = 0.1
 
     def handle(self, *args, **kwargs):
         faker = Faker("zh-cn")
         iteration_count = 1
-        bulk_size = 1000
+        bulk_size = 2000
         LOGGER.info("创建 %d 个学生", iteration_count * bulk_size)
         start = time.time()
         for _ in range(iteration_count):
