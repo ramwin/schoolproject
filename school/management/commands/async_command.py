@@ -9,7 +9,7 @@ import logging
 from typing import Any, Dict, Optional
 
 from django.core.management.base import BaseCommand
-from django_redis import get_redis_connection
+from utils.consts import ASYNC_REDIS_CLUSTER
 import redis.asyncio as redis
 
 
@@ -205,7 +205,7 @@ class Command(BaseCommand):
             LOGGER.info(f"最大任务数: {max_tasks}")
         
         # 获取Redis连接
-        redis_client = get_redis_connection("default")
+        redis_client = ASYNC_REDIS_CLUSTER
         
         try:
             await self.process_redis_tasks(redis_client, redis_key, max_tasks, max_concurrent, batch_size)
