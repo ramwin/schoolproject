@@ -11,6 +11,7 @@ import sys
 import django
 import json
 import time
+import asyncio
 
 # 添加项目路径到Python路径
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -19,12 +20,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'schoolproject.settings')
 django.setup()
 
-from django_redis import get_redis_connection
+from utils.consts import ASYNC_REDIS_CLUSTER
 
 
-def add_test_tasks():
+async def add_test_tasks():
     """向Redis添加测试任务"""
-    redis_client = get_redis_connection("default")
+    redis_client = ASYNC_REDIS_CLUSTER
     
     # 添加一些测试任务
     test_tasks = [
@@ -52,16 +53,16 @@ def add_test_tasks():
     ]
     
     for task in test_tasks:
-        redis_client.lpush("async_tasks", json.dumps(task))
+        await redis_client.lpush("async_tasks", json.dumps(task))
         print(f"已添加任务: {task}")
     
-    print(f"Redis列表 async_tasks 当前长度: {redis_client.llen('async_tasks')}")
+    print(f"Redis列表 async_tasks 当前长度: {await redis_client.llen('async_tasks')}")
 
 
-def clear_test_tasks():
+async def clear_test_tasks():
     """清空测试任务"""
-    redis_client = get_redis_connection("default")
-    redis_client.delete("async_tasks")
+    redis_client = ASYNC_REDIS_CLUSTER
+    await redis_client.delete("async_tasks")
     print("已清空测试任务")
 
 
@@ -75,6 +76,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     if args.action == "add":
-        add_test_tasks()
+        asyncio.run(add_test_tasks())
     elif args.action == "clear":
-        clear_test_tasks() 
+        asyncio.run(clear_test_tasks())

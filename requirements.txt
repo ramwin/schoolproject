@@ -23,6 +23,7 @@ grpcio-tools>=1.67.1,<2
 protobuf>=5.26.1,<6
 
 # django
+django-cors-headers
 django-extensions
 django-eventlog2>=2.2,<3
 django-sync-model
