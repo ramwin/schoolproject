@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'eventlog.apps.EventLogConfig',
+    "rest_extensions",
     'rest_framework',
     'rest_framework.authtoken',
     "django_filters",

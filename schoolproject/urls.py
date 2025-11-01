@@ -27,6 +27,8 @@ LOGGER = logging.getLogger(__name__)
 
 def sleep(request, timeout: int):
     LOGGER.info("处理: %d", timeout)
+    if timeout > 10:
+        raise ValueError(timeout)
     time.sleep(timeout)
     LOGGER.info("处理完毕: %d", timeout)
     return JsonResponse({"timeout": timeout})

@@ -16,6 +16,12 @@ DATABASES = {
         "OPTIONS": {
             # "pool": True,
         },
+        "PASSWORD": "wangxiang",
+        "max_size": 5,
+        "CONN_MAX_AGE": 10,
+        "OPTIONS": {
+            # "pool": True,
+        },
     },
     "db_02": {
         'ENGINE': 'django.db.backends.postgresql',

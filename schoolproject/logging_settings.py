@@ -7,6 +7,18 @@ import logging
 import os
 import sys
 from pathlib import Path
+from typing import Literal
+
+
+CONTEXT: Literal["command", "web"]
+
+if "runserver" in sys.argv:
+    CONTEXT = "web"
+elif "manage.py" in sys.argv:
+    CONTEXT = "command"
+else:
+    raise ValueError(sys.argv)
+
 
 
 class NoErrorFilter(logging.Filter):
@@ -33,12 +45,30 @@ DEFAULT_HANDLERS = [
         "console",
         "error_console",
 ]
+if CONTEXT == "web":
+    DEFAULT_HANDLERS.extend(["django_error", "django_info"])
 handlers = {
     'error_file': {
         'level': "ERROR",
         'class': 'logging_ext2.handlers.TimedRotatingFileHandler',
         'max_keep': 100,
         'filename': LOG_DIR / "error" / 'error.log',
+        'formatter': 'verbose',
+        "datetime_formatter": "%Y-%m-%d",
+    },
+    "django_error": {
+        'level': "ERROR",
+        'class': 'logging_ext2.handlers.TimedRotatingFileHandler',
+        'max_keep': 100,
+        'filename': LOG_DIR / "web" / 'error.log',
+        'formatter': 'verbose',
+        "datetime_formatter": "%Y-%m-%d",
+    },
+    "django_info": {
+        'level': "INFO",
+        'class': 'logging_ext2.handlers.TimedRotatingFileHandler',
+        'max_keep': 100,
+        'filename': LOG_DIR / "web" / 'info.log',
         'formatter': 'verbose',
         "datetime_formatter": "%Y-%m-%d",
     },
