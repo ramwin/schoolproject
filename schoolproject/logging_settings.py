@@ -47,6 +47,16 @@ DEFAULT_HANDLERS = [
 ]
 if CONTEXT == "web":
     DEFAULT_HANDLERS.extend(["django_error", "django_info"])
+COMMAND_HANDLERS = [
+        'warning_file',
+        'error_file',
+        "console",
+        "error_console",
+]
+
+for level in ["debug", "info", "warning", "error"]:
+    LOG_DIR.joinpath(level).mkdir(exist_ok=True)
+
 handlers = {
     'error_file': {
         'level': "ERROR",
